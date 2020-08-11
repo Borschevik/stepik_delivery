@@ -128,6 +128,8 @@ def ordered():
     """
     form = CartForm()
     OrderedService(form).add_order(session)
+    session["cart"] = None
+    session.modified = True
     return render_template("ordered.html")
 
 
