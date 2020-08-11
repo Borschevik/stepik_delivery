@@ -1,6 +1,5 @@
-# stepik_teacher
- The Second project from stepik academia
-
+# Delivery 
+  Project form stpeik with food delivery service
 
 ## Installation
 
