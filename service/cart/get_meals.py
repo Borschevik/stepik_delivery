@@ -21,13 +21,15 @@ class GetMeals:
         """
         self._cart = cart
 
-    def get_bin(self) -> dict:
+    def get_bin(self) -> typing.Optional[dict]:
         """
         Get data for bin
 
         :return: dict with meals
         """
         meals_data: dict = defaultdict(dict)
+        if not self._cart:
+            return {}
         for meal_id in self._cart:
             meal = Meal.query.filter(Meal.id == meal_id).first()
             if meal.title not in meals_data:
