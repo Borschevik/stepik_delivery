@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block head %}
+  <style>
+    /* Sticky footer styles
+    -------------------------------------------------- */
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+    body {
+      margin-bottom: 60px; /* Margin bottom by footer height */
+    }
+    .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 60px; /* Set the fixed height of the footer here */
+      line-height: 60px; /* Vertically center the text there */
+    }
+    .navbar {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  </style>
+{% endblock %}
+
+{% include "cart_header.html" %}
+{% block body %}
+  <main class="container">
+    <section class="row">
+      <div class="col-12 col-lg-8">
+        <h1 class="h3 my-5">Личный кабинет. Заказы</h1>
+        {% for date, order in data.items()%}
+        <div class="mt-4 card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-7 col-lg-9">
+                  <span class="h5 font-weight-bold">{{date}}</span>
+                  <span class="h5">- {{order.total}} P</span>
+                </div>
+
+              </div>
+            </li>
+            <div class="card-body">
+              <div class="row">
+                {% for course, values in order.dishes.items() %}
+                  <p class="col-4 text-muted">{{course}}</p>
+                  <p class="col-2 text-muted">{{values.count}}</p>
+                  <p class="col-6 text-muted">{{values.sum}}</p>
+                {% endfor %}
+              </div>
+            </div>
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+ {% include "footer.html" %}
+ {% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block head %}
+  <style>
+    /* Sticky footer styles
+    -------------------------------------------------- */
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+    body {
+      margin-bottom: 60px; /* Margin bottom by footer height */
+    }
+    .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 60px; /* Set the fixed height of the footer here */
+      line-height: 60px; /* Vertically center the text there */
+    }
+    .navbar {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  </style>
+{% endblock %}
+{% include "cart_header.html" %}
+{% block body %}
+  <main class="container">
+    <h1 class="h3 my-4">Корзина</h1>
+
+    {% if session.is_delete %}
+    <div class="alert alert-warning" role="alert">Блюдо удалено из корзины</div>
+    {% do session.update({'is_delete': False}) %}
+    {% endif %}
+    {% if not session.user %}
+      <div class="alert alert-warning" role="alert">Чтобы сделать заказ – <a href="{{url_for('service.login')}}">войдите</a> или <a href="{{url_for('service.register')}}">зарегистрируйтесь</a></div>
+    {% endif %}
+    {% if not session.cart %}
+      <div class="alert alert-warning" role="alert">Корзина пуста сделайте заказ <a href="{{url_for('service.main')}}">блюда</a></div>
+    {% endif %}
+      {% for field in form.errors %}
+          {% for error in form.errors[field] %}
+          <div style="padding:4px;color:red;border:1px solid red;">
+              {{error}}
+          </div>
+          {% endfor %}
+    {% endfor %}
+
+    <div class="row mt-5">
+
+
+        <div class="col-4">
+          <form action="{{url_for('service.ordered')}}" method="POST">
+          <h4 class="">Ваши данные</h4>
+          {{ form.hidden_tag() }}
+          {{ form.name.label(class="md-4 order-md-1") }}
+          {{ form.name(class="font-weight-bold form-control") }}
+          {{ form.address.label(class="md-4 order-md-1") }}
+          {{ form.address(class="font-weight-bold form-control") }}
+          {{ form.mail.label(class="md-4 order-md-1") }}
+          {{ form.mail(class="font-weight-bold form-control") }}
+          {% if session.user %}
+          {{ form.phone.label(class="md-4 order-md-1") }}
+          {{ form.phone(class="font-weight-bold form-control") }}
+          {% endif %}
+          {% if session.user and session.cart %}
+            <div>
+              <button type="submit" class=" mt-3 mb-5 btn btn-danger">Оформить заказ</button>
+            </div>
+          {% endif %}
+          </form>
+      </div>
+
+    <div class="col-1"></div>
+    <div class="col-7">
+      <h4 class="mb-3 col-7 mb-5">{{count}} блюда в корзине</h4>
+      <table class="table">
+        <tbody>
+        {% for value in data.values()%}
+          <tr>
+            <th scope="row">{{value.title}}</th>
+            <td></td>
+            <td>{{value.count}}</td>
+            <td>{{value.price}}</td>
+            <td><a class="text-danger" href="{{url_for('service.removecart', meal_id=value.id)}}">Удалить</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+        <hr>
+        <p class="display-4 my-2 ">{{cart_sum}}</p>
+      </div>
+    </div>
+  </main>
+{% include "footer.html" %}
+{% endblock %}
